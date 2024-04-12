@@ -7,4 +7,12 @@ A File manager application
 3) The user should be able to create new files and folders in the selected directory.
 4) The developer should write unit tests for the application's logic and functionality.
 
-# file_manager
+## Screenshots
+![Alt text](https://example.com/image.jpg)
+
+To install this project, follow these steps:
+
+1. Clone the repository.
+2. Run `flutter pub get`.
+3. Run `flutter run -v`.
+
