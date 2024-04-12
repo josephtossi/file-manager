@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:file_manager_project/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:open_file/open_file.dart';
 
 class FileExplorerFolder extends StatefulWidget {
   final FileSystemEntity entity;
@@ -18,9 +18,9 @@ class _FileExplorerFolderState extends State<FileExplorerFolder> {
   late FileSystemEntity _fileSystemEntity;
 
   Future<void> _launchFile(String filePath) async {
-    if (await canLaunch(filePath)) {
-      await launch(filePath);
-    } else {
+    try {
+      OpenFile.open(filePath);
+    } catch (e) {
       showDialog(
         // ignore: use_build_context_synchronously
         context: context,
@@ -77,9 +77,9 @@ class _FileExplorerFolderState extends State<FileExplorerFolder> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    _fileSystemEntity.path.split('/').last.length > 35 ?
-                    '${_fileSystemEntity.path.split('/').last.substring(0,35)} ...':
-                    _fileSystemEntity.path.split('/').last,
+                    _fileSystemEntity.path.split('/').last.length > 35
+                        ? '${_fileSystemEntity.path.split('/').last.substring(0, 35)} ...'
+                        : _fileSystemEntity.path.split('/').last,
                     overflow: TextOverflow.ellipsis,
                     style: Constant.subtitle2,
                   ),
