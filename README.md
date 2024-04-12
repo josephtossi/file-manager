@@ -8,7 +8,7 @@ A File manager application
 4) The developer should write unit tests for the application's logic and functionality.
 
 ## Screenshots
-![Alt text](https://example.com/image.jpg)
+![Alt text](images/Screenshot_20240412_195455.jpg)
 
 To install this project, follow these steps:
 
