@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'package:external_path/external_path.dart';
 import 'package:file_manager_project/constants.dart';
+import 'package:file_manager_project/view/pages/create_folder_or_file.dart';
 import 'package:file_manager_project/view/pages/folders_contents_screen.dart';
 import 'package:file_manager_project/view/widgets/file_explorer_folder.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -25,13 +26,6 @@ class _MainPageState extends State<MainPage> {
     } else {
       await Permission.storage.request();
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    checkPermission();
-    _getCurrentDirectory();
   }
 
   void _navigateToDirectory(String path) {
@@ -62,29 +56,43 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Constant.grey,
-      appBar: AppBar(
-        backgroundColor: Constant.lightBlue,
-        title: const Text(
-          'File Explorer',
-          style: Constant.subtitle2,
+    return VisibilityDetector(
+      onVisibilityChanged: (VisibilityInfo visibility) {
+        if (visibility.visibleFraction > 0.0 && mounted) {
+          checkPermission();
+          _getCurrentDirectory();
+        }
+      },
+      key: const ObjectKey('main_page'),
+      child: Scaffold(
+        backgroundColor: Constant.grey,
+        appBar: AppBar(
+          backgroundColor: Constant.lightBlue,
+          title: const Text(
+            'File Explorer',
+            style: Constant.subtitle2,
+          ),
         ),
-      ),
-      body: ListView.builder(
-        itemCount: _filesAndFolders.length,
-        itemBuilder: (context, index) {
-          return FileExplorerFolder(
-            navigateToDirectory: _navigateToDirectory,
-            entity: _filesAndFolders[index],
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Implement functionality to create new files and folders
-        },
-        child: const Icon(Icons.add),
+        body: ListView.builder(
+          itemCount: _filesAndFolders.length,
+          itemBuilder: (context, index) {
+            return FileExplorerFolder(
+              navigateToDirectory: _navigateToDirectory,
+              entity: _filesAndFolders[index],
+            );
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      CreateFolderOrFile(folderPath: _currentDirectory.path)),
+            );
+          },
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
